@@ -1,0 +1,94 @@
+{
+    "project_title": "Air Quality Analysis and NO2 Concentration Estimation System",
+    "approach": "Simultaneous NO2(GT) Concentration Estimation (MOX Sensor Calibration)",
+    "target_column": "NO2(GT)",
+    "target_unit": "\u00b5g/m\u00b3",
+    "feature_columns": [
+        "PT08.S1(CO)",
+        "PT08.S2(NMHC)",
+        "PT08.S3(NOx)",
+        "PT08.S4(NO2)",
+        "PT08.S5(O3)",
+        "T",
+        "RH",
+        "AH"
+    ],
+    "selected_model": "Random Forest (Baseline)",
+    "best_params": {
+        "model__max_depth": 12,
+        "model__max_features": "sqrt",
+        "model__min_samples_leaf": 5,
+        "model__n_estimators": 200
+    },
+    "split_strategy": "Chronological 80/20 Train-Test Split",
+    "train_samples": 5914,
+    "test_samples": 1479,
+    "metrics": {
+        "Model": "Random Forest",
+        "CV_RMSE (Train)": 23.626,
+        "Train_RMSE": 11.121,
+        "Test_MAE": 23.864,
+        "Test_MSE": 1064.634,
+        "Test_RMSE": 32.629,
+        "Train_R2": 0.9334,
+        "Test_R2": 0.6117
+    },
+    "feature_stats": {
+        "PT08.S1(CO)": {
+            "min": 647.0,
+            "max": 2040.0,
+            "median": 1078.0,
+            "p05": 815.0,
+            "p95": 1515.4
+        },
+        "PT08.S2(NMHC)": {
+            "min": 383.0,
+            "max": 2214.0,
+            "median": 925.0,
+            "p05": 568.0,
+            "p95": 1423.0
+        },
+        "PT08.S3(NOx)": {
+            "min": 322.0,
+            "max": 2683.0,
+            "median": 792.0,
+            "p05": 477.0,
+            "p95": 1280.4
+        },
+        "PT08.S4(NO2)": {
+            "min": 551.0,
+            "max": 2775.0,
+            "median": 1460.0,
+            "p05": 872.0,
+            "p95": 2032.0
+        },
+        "PT08.S5(O3)": {
+            "min": 221.0,
+            "max": 2523.0,
+            "median": 991.0,
+            "p05": 464.6,
+            "p95": 1791.4
+        },
+        "T": {
+            "min": -1.9,
+            "max": 44.6,
+            "median": 17.1,
+            "p05": 4.4,
+            "p95": 34.8
+        },
+        "RH": {
+            "min": 9.2,
+            "max": 88.7,
+            "median": 49.0,
+            "p05": 19.9,
+            "p95": 77.8
+        },
+        "AH": {
+            "min": 0.185,
+            "max": 2.181,
+            "median": 0.965,
+            "p05": 0.39,
+            "p95": 1.715
+        }
+    }
+}
