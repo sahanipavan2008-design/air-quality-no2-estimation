@@ -19,12 +19,12 @@ st.set_page_config(
 
 # Relative paths (100% independent of Google Colab / Google Drive)
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join(APP_DIR, "models", "best_no2_model.joblib")
-META_PATH = os.path.join(APP_DIR, "models", "model_metadata.json")
-DATA_PATH = os.path.join(APP_DIR, "data", "cleaned_air_quality.csv")
-STATS_PATH = os.path.join(APP_DIR, "data", "statistical_summary.csv")
-COMP_PATH = os.path.join(APP_DIR, "data", "model_comparison_final.csv")
-FIG_DIR = os.path.join(APP_DIR, "figures")
+MODEL_PATH = os.path.join(APP_DIR, "best_no2_model.joblib")
+META_PATH = os.path.join(APP_DIR, "model_metadata.json")
+DATA_PATH = os.path.join(APP_DIR, "cleaned_air_quality.csv")
+STATS_PATH = os.path.join(APP_DIR, "statistical_summary.csv")
+COMP_PATH = os.path.join(APP_DIR, "model_comparison_final.csv")
+FIG_DIR = APP_DIR
 
 # ------------------------------------------------------------------
 # 2. CACHED LOADERS WITH ERROR HANDLING
