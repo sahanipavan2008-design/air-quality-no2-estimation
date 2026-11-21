@@ -274,12 +274,13 @@ elif page == "7. NO2 Concentration Estimator":
                 )
         submitted = st.form_submit_button("Estimate NO₂ Concentration", type="primary")
 
-   if hasattr(model, "named_steps") and "model" in model.named_steps:
+  if submitted:
+        input_df = pd.DataFrame([inputs])[FEATURE_COLS]
+        if hasattr(model, "named_steps") and "model" in model.named_steps:
             pred_no2 = float(model.named_steps["model"].predict(input_df)[0])
         else:
             pred_no2 = float(model.predict(input_df)[0])
         band_label, band_color = classify_no2_band(pred_no2)
-
         st.markdown("---")
         r1, r2 = st.columns(2)
         r1.metric("Estimated NO₂(GT) Concentration", f"{pred_no2:.2f} µg/m³")
