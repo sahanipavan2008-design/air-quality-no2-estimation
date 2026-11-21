@@ -23,13 +23,10 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    /* Clean typography & page padding */
     .block-container {
         padding-top: 1.5rem;
         padding-bottom: 2.5rem;
     }
-
-    /* Gradient Hero Banner */
     .hero-banner {
         background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
         padding: 2rem 2.2rem;
@@ -65,8 +62,6 @@ st.markdown(
         margin: 0;
         max-width: 820px;
     }
-
-    /* Modern KPI Metric Cards */
     .kpi-card {
         background: rgba(255, 255, 255, 0.04);
         border: 1px solid rgba(148, 163, 184, 0.22);
@@ -98,8 +93,6 @@ st.markdown(
         color: #94a3b8;
         margin-top: 0.25rem;
     }
-
-    /* Info / Feature Cards */
     .info-card {
         background: rgba(255, 255, 255, 0.03);
         border: 1px solid rgba(148, 163, 184, 0.2);
@@ -113,8 +106,6 @@ st.markdown(
         margin-bottom: 0.4rem;
         font-weight: 700;
     }
-
-    /* Result Highlight Card */
     .result-box {
         background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.9));
         border-radius: 16px;
@@ -139,8 +130,6 @@ st.markdown(
         font-size: 0.9rem;
         margin-top: 0.35rem;
     }
-
-    /* Sidebar branding box */
     .sidebar-brand {
         background: linear-gradient(135deg, #0f2027, #2c5364);
         padding: 1.1rem;
@@ -486,7 +475,6 @@ elif page == "7. NO2 Concentration Estimator":
         "Choose a realistic scenario template or enter custom MOX sensor & weather readings to estimate reference NO₂ concentration (µg/m³)."
     )
 
-    # Preset Scenario Templates (based on verified dataset percentiles)
     presets = {
         "Custom / Dataset Median": {col: float(FEAT_STATS[col]["median"]) for col in FEATURE_COLS},
         "🌙 Quiet Night (Low Traffic)": {
@@ -495,4 +483,111 @@ elif page == "7. NO2 Concentration Estimator":
         },
         "🚗 Evening Rush Hour (High Traffic)": {
             "PT08.S1(CO)": 1480.0, "PT08.S2(NMHC)": 1380.0, "PT08.S3(NOx)": 520.0,
-            "PT08.S4(NO2)": 1850.0, "PT08.S5(O3)": 1680.0, "T
+            "PT08.S4(NO2)": 1850.0, "PT08.S5(O3)": 1680.0, "T": 16.5, "RH": 52.0, "AH": 0.95
+        },
+        "❄️ Cold Winter Peak": {
+            "PT08.S1(CO)": 1550.0, "PT08.S2(NMHC)": 1420.0, "PT08.S3(NOx)": 480.0,
+            "PT08.S4(NO2)": 1450.0, "PT08.S5(O3)": 1800.0, "T": 5.0, "RH": 70.0, "AH": 0.60
+        }
+    }
+
+    selected_preset = st.selectbox("⚡ Quick-Fill Scenario Template", list(presets.keys()))
+    defaults = presets[selected_preset]
+
+    with st.form("prediction_form"):
+        c1, c2 = st.columns(2)
+        inputs = {}
+        for idx, col in enumerate(FEATURE_COLS):
+            f_min = float(FEAT_STATS[col]["min"])
+            f_max = float(FEAT_STATS[col]["max"])
+            f_val = float(np.clip(defaults[col], f_min, f_max))
+            step = 0.01 if col == "AH" else (0.1 if col in ["T", "RH"] else 1.0)
+            target_col = c1 if idx < 4 else c2
+            with target_col:
+                inputs[col] = st.number_input(
+                    label=f"{col} (range: {f_min} to {f_max})",
+                    min_value=f_min,
+                    max_value=f_max,
+                    value=f_val,
+                    step=step
+                )
+        submitted = st.form_submit_button("🚀 Estimate NO₂ Concentration", type="primary", use_container_width=True)
+
+    if submitted:
+        input_df = pd.DataFrame([inputs])[FEATURE_COLS]
+        if hasattr(model, "named_steps") and "model" in model.named_steps:
+            pred_no2 = float(model.named_steps["model"].predict(input_df)[0])
+        else:
+            pred_no2 = float(model.predict(input_df)[0])
+
+        band_label, band_color, band_bg = classify_no2_band(pred_no2)
+
+        st.markdown(
+            f"""
+            <div class="result-box">
+                <div style="font-size:0.85rem; text-transform:uppercase; letter-spacing:0.06em; color:#94a3b8; font-weight:600;">
+                    Estimated Reference NO₂(GT) Concentration
+                </div>
+                <div class="result-number">{pred_no2:.2f} µg/m³</div>
+                <span class="band-pill" style="color:{band_color}; background:{band_bg}; border: 1px solid {band_color};">
+                    {band_label}
+                </span>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+        st.caption(
+            "⚠️ **Scientific Distinction:** This output is an estimated single-pollutant **NO₂ concentration (µg/m³)** "
+            "from calibrated MOX sensors—it is **not** an official multi-pollutant Air Quality Index (AQI)."
+        )
+
+        report_df = input_df.copy()
+        report_df["Scenario_Template"] = selected_preset
+        report_df["Estimated_NO2_ug_m3"] = round(pred_no2, 2)
+        report_df["Reference_Band"] = band_label
+        st.download_button(
+            "⬇️ Download Prediction Report (CSV)",
+            data=report_df.to_csv(index=False).encode("utf-8"),
+            file_name="no2_estimation_result.csv",
+            mime="text/csv"
+        )
+
+# ------------------------------------------------------------------
+# SECTION 8: CONCLUSION & LIMITATIONS
+# ------------------------------------------------------------------
+elif page == "8. Conclusion & Limitations":
+    render_hero(
+        "Project Wrap-Up",
+        "Conclusion & Scientific Limitations",
+        "Honest engineering evaluation of achievements, sensor drift constraints, and future hardware integration."
+    )
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown(
+            f"""
+            <div class="info-card">
+                <h4>✅ Key Conclusions</h4>
+                <ul>
+                    <li><b>{meta['selected_model']}</b> achieved a chronological Test RMSE of <b>{METRICS['Test_RMSE']} µg/m³</b> (MAE = <b>{METRICS['Test_MAE']} µg/m³</b>, R² = <b>{METRICS['Test_R2']}</b>), cutting error by ~50% vs. the Dummy baseline (64.88 µg/m³).</li>
+                    <li>Cross-sensitivity among MOX sensors (<code>PT08.S5(O3)</code>, <code>PT08.S3(NOx)</code>, <code>PT08.S1(CO)</code>) and humidity (<code>AH</code>) is essential for accurate NO₂ calibration.</li>
+                </ul>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+    with col2:
+        st.markdown(
+            """
+            <div class="info-card" style="border-left-color: #f59e0b;">
+                <h4>⚠️ Honest Limitations</h4>
+                <ul>
+                    <li><b>Sensor Drift & Winter Shift:</b> Testing on the final 20% (winter 2005) reflects real-world MOX aging and seasonal elevation.</li>
+                    <li><b>Single-Location Data:</b> Collected in 2004–2005 at one Italian roadside; local recalibration is required for new cities.</li>
+                    <li><b>Not an Official AQI:</b> Estimates single-pollutant NO₂ concentration (µg/m³) only.</li>
+                </ul>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
