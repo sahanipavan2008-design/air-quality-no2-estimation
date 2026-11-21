@@ -18,7 +18,7 @@ st.set_page_config(
 )
 
 # ------------------------------------------------------------------
-# 2. MODERN CUSTOM CSS DESIGN SYSTEM
+# 2. MODERN CUSTOM CSS DESIGN SYSTEM (INCLUDING SLEEK SIDEBAR NAV)
 # ------------------------------------------------------------------
 st.markdown(
     """
@@ -27,6 +27,110 @@ st.markdown(
         padding-top: 1.5rem;
         padding-bottom: 2.5rem;
     }
+
+    /* Sidebar background & spacing */
+    section[data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #0b1320 0%, #0f172a 100%);
+        border-right: 1px solid rgba(148, 163, 184, 0.14);
+    }
+    section[data-testid="stSidebar"] .block-container {
+        padding-top: 1.2rem;
+    }
+
+    /* Modern Sidebar Navigation Buttons */
+    section[data-testid="stSidebar"] div.stButton {
+        margin-bottom: -0.35rem;
+    }
+    section[data-testid="stSidebar"] div.stButton > button {
+        width: 100%;
+        justify-content: flex-start !important;
+        text-align: left !important;
+        padding: 0.62rem 0.95rem !important;
+        border-radius: 10px !important;
+        font-size: 0.92rem !important;
+        font-weight: 500 !important;
+        letter-spacing: 0.01em;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        border: 1px solid transparent !important;
+    }
+    /* Inactive Nav Item */
+    section[data-testid="stSidebar"] div.stButton > button[kind="secondary"] {
+        background: transparent !important;
+        color: #cbd5e1 !important;
+    }
+    section[data-testid="stSidebar"] div.stButton > button[kind="secondary"]:hover {
+        background: rgba(56, 189, 248, 0.09) !important;
+        color: #ffffff !important;
+        border-color: rgba(56, 189, 248, 0.22) !important;
+        transform: translateX(4px);
+    }
+    /* Active Nav Item */
+    section[data-testid="stSidebar"] div.stButton > button[kind="primary"] {
+        background: linear-gradient(90deg, rgba(56, 189, 248, 0.24) 0%, rgba(14, 165, 233, 0.08) 100%) !important;
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        border: 1px solid rgba(56, 189, 248, 0.35) !important;
+        border-left: 4px solid #38bdf8 !important;
+        box-shadow: 0 4px 14px rgba(56, 189, 248, 0.16) !important;
+    }
+
+    .nav-section-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #64748b;
+        margin: 0.85rem 0 0.45rem 0.4rem;
+    }
+
+    /* Sidebar Brand Card */
+    .sidebar-brand {
+        background: linear-gradient(135deg, #0f2027 0%, #203a43 55%, #2c5364 100%);
+        padding: 1.15rem 1rem;
+        border-radius: 14px;
+        color: white;
+        margin-bottom: 0.9rem;
+        text-align: center;
+        border: 1px solid rgba(125, 211, 252, 0.22);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+    }
+    .sidebar-brand h3 {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: #ffffff;
+    }
+    .sidebar-brand p {
+        margin: 0.25rem 0 0 0;
+        font-size: 0.76rem;
+        color: #cbd5e1;
+    }
+
+    /* Sidebar Model Snapshot Card */
+    .sidebar-metrics {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(148, 163, 184, 0.16);
+        border-radius: 12px;
+        padding: 0.85rem 0.95rem;
+        margin-top: 0.6rem;
+        font-size: 0.82rem;
+        color: #cbd5e1;
+    }
+    .sidebar-metrics .m-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.22rem 0;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+    }
+    .sidebar-metrics .m-row:last-child {
+        border-bottom: none;
+    }
+    .sidebar-metrics .m-val {
+        color: #38bdf8;
+        font-weight: 700;
+    }
+
+    /* Gradient Hero Banner */
     .hero-banner {
         background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
         padding: 2rem 2.2rem;
@@ -62,6 +166,8 @@ st.markdown(
         margin: 0;
         max-width: 820px;
     }
+
+    /* Modern KPI Metric Cards */
     .kpi-card {
         background: rgba(255, 255, 255, 0.04);
         border: 1px solid rgba(148, 163, 184, 0.22);
@@ -93,6 +199,8 @@ st.markdown(
         color: #94a3b8;
         margin-top: 0.25rem;
     }
+
+    /* Info / Feature Cards */
     .info-card {
         background: rgba(255, 255, 255, 0.03);
         border: 1px solid rgba(148, 163, 184, 0.2);
@@ -106,8 +214,10 @@ st.markdown(
         margin-bottom: 0.4rem;
         font-weight: 700;
     }
+
+    /* Result Highlight Card */
     .result-box {
-        background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.9));
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.92));
         border-radius: 16px;
         padding: 1.6rem 1.8rem;
         border: 1px solid rgba(56, 189, 248, 0.35);
@@ -129,26 +239,6 @@ st.markdown(
         font-weight: 700;
         font-size: 0.9rem;
         margin-top: 0.35rem;
-    }
-    .sidebar-brand {
-        background: linear-gradient(135deg, #0f2027, #2c5364);
-        padding: 1.1rem;
-        border-radius: 12px;
-        color: white;
-        margin-bottom: 1rem;
-        text-align: center;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-    }
-    .sidebar-brand h3 {
-        margin: 0;
-        font-size: 1.15rem;
-        font-weight: 800;
-        color: #ffffff;
-    }
-    .sidebar-brand p {
-        margin: 0.25rem 0 0 0;
-        font-size: 0.78rem;
-        color: #cbd5e1;
     }
     </style>
     """,
@@ -239,8 +329,26 @@ def render_kpi(col, label, value, foot):
     )
 
 # ------------------------------------------------------------------
-# 5. SIDEBAR NAVIGATION
+# 5. MODERN SAAS-STYLE SIDEBAR NAVIGATION (REPLACES RADIO BUTTONS)
 # ------------------------------------------------------------------
+NAV_GROUPS = {
+    "EXPLORE": [
+        ("overview", "🏠  Project Overview"),
+        ("dataset", "🗂️  Dataset Information"),
+        ("analytics", "📊  Air Quality Analytics"),
+        ("stats", "📐  Statistical Analysis"),
+        ("interactive", "🔎  Interactive Explorer"),
+    ],
+    "MACHINE LEARNING": [
+        ("performance", "🏆  Model Performance"),
+        ("estimator", "⚡  NO₂ Live Estimator"),
+        ("conclusion", "📝  Conclusion & Limits"),
+    ]
+}
+
+if "active_page" not in st.session_state:
+    st.session_state.active_page = "overview"
+
 st.sidebar.markdown(
     """
     <div class="sidebar-brand">
@@ -251,35 +359,41 @@ st.sidebar.markdown(
     unsafe_allow_html=True
 )
 
-page = st.sidebar.radio(
-    "Navigation",
-    [
-        "1. Project Overview",
-        "2. Dataset Information",
-        "3. Air Quality Analytics",
-        "4. Statistical Analysis",
-        "5. Interactive Visualizations",
-        "6. Model Performance",
-        "7. NO2 Concentration Estimator",
-        "8. Conclusion & Limitations"
-    ],
-    label_visibility="collapsed"
-)
+for group_name, items in NAV_GROUPS.items():
+    st.sidebar.markdown(f'<div class="nav-section-label">{group_name}</div>', unsafe_allow_html=True)
+    for page_key, label in items:
+        is_active = (st.session_state.active_page == page_key)
+        if st.sidebar.button(
+            label,
+            key=f"nav_{page_key}",
+            type="primary" if is_active else "secondary",
+            use_container_width=True
+        ):
+            st.session_state.active_page = page_key
+            st.rerun()
 
-st.sidebar.markdown("---")
-st.sidebar.markdown("**Model Snapshot**")
-st.sidebar.info(
-    f"**Model:** {meta['selected_model']}\n\n"
-    f"**Test RMSE:** {METRICS['Test_RMSE']} µg/m³\n\n"
-    f"**Test MAE:** {METRICS['Test_MAE']} µg/m³\n\n"
-    f"**Test R²:** {METRICS['Test_R2']}"
+st.sidebar.markdown(
+    f"""
+    <div class="sidebar-metrics">
+        <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.08em; color:#64748b; text-transform:uppercase; margin-bottom:0.35rem;">
+            Active Model Snapshot
+        </div>
+        <div class="m-row"><span>Model</span><span class="m-val">Random Forest</span></div>
+        <div class="m-row"><span>Test RMSE</span><span class="m-val">{METRICS['Test_RMSE']} µg/m³</span></div>
+        <div class="m-row"><span>Test MAE</span><span class="m-val">{METRICS['Test_MAE']} µg/m³</span></div>
+        <div class="m-row"><span>Test R²</span><span class="m-val">{METRICS['Test_R2']}</span></div>
+    </div>
+    """,
+    unsafe_allow_html=True
 )
-st.sidebar.caption("UCI Air Quality Dataset (ID: 360) • Chronological 80/20 Split")
+st.sidebar.caption("UCI Dataset (ID: 360) • Chronological 80/20 Split")
+
+page = st.session_state.active_page
 
 # ------------------------------------------------------------------
 # SECTION 1: PROJECT OVERVIEW
 # ------------------------------------------------------------------
-if page == "1. Project Overview":
+if page == "overview":
     render_hero(
         "AI/ML & Data Analytics Capstone",
         "Air Quality Analysis & NO₂ Concentration Estimation System",
@@ -318,7 +432,7 @@ if page == "1. Project Overview":
 # ------------------------------------------------------------------
 # SECTION 2: DATASET INFORMATION
 # ------------------------------------------------------------------
-elif page == "2. Dataset Information":
+elif page == "dataset":
     render_hero(
         "Data Provenance & Schema",
         "UCI Air Quality Dataset (ID: 360)",
@@ -353,7 +467,7 @@ elif page == "2. Dataset Information":
 # ------------------------------------------------------------------
 # SECTION 3: AIR QUALITY ANALYTICS
 # ------------------------------------------------------------------
-elif page == "3. Air Quality Analytics":
+elif page == "analytics":
     render_hero(
         "Exploratory Data Analysis",
         "High-DPI Air Quality Visualizations",
@@ -380,7 +494,7 @@ elif page == "3. Air Quality Analytics":
 # ------------------------------------------------------------------
 # SECTION 4: STATISTICAL ANALYSIS
 # ------------------------------------------------------------------
-elif page == "4. Statistical Analysis":
+elif page == "stats":
     render_hero(
         "Quantitative Profiling",
         "Descriptive Statistical Analysis",
@@ -399,7 +513,7 @@ elif page == "4. Statistical Analysis":
 # ------------------------------------------------------------------
 # SECTION 5: INTERACTIVE VISUALIZATIONS
 # ------------------------------------------------------------------
-elif page == "5. Interactive Visualizations":
+elif page == "interactive":
     render_hero(
         "Dynamic Data Explorer",
         "Interactive Sensor vs. NO₂(GT) Explorer",
@@ -441,7 +555,7 @@ elif page == "5. Interactive Visualizations":
 # ------------------------------------------------------------------
 # SECTION 6: MACHINE LEARNING MODEL PERFORMANCE
 # ------------------------------------------------------------------
-elif page == "6. Model Performance":
+elif page == "performance":
     render_hero(
         "Model Benchmarking",
         "Machine Learning Evaluation & Diagnostics",
@@ -468,7 +582,7 @@ elif page == "6. Model Performance":
 # ------------------------------------------------------------------
 # SECTION 7: NO2 CONCENTRATION ESTIMATOR (WITH PRESET TEMPLATES)
 # ------------------------------------------------------------------
-elif page == "7. NO2 Concentration Estimator":
+elif page == "estimator":
     render_hero(
         "Live Virtual Sensor",
         "Real-Time NO₂ Concentration Estimator",
@@ -556,7 +670,7 @@ elif page == "7. NO2 Concentration Estimator":
 # ------------------------------------------------------------------
 # SECTION 8: CONCLUSION & LIMITATIONS
 # ------------------------------------------------------------------
-elif page == "8. Conclusion & Limitations":
+elif page == "conclusion":
     render_hero(
         "Project Wrap-Up",
         "Conclusion & Scientific Limitations",
