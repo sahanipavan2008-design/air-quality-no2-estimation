@@ -17,7 +17,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Relative paths (100% independent of Google Colab / Google Drive)
+# Relative paths (matching files in the GitHub repository root folder)
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(APP_DIR, "best_no2_model.joblib")
 META_PATH = os.path.join(APP_DIR, "model_metadata.json")
@@ -39,7 +39,7 @@ def load_model():
 def load_metadata():
     if not os.path.exists(META_PATH):
         raise FileNotFoundError(f"Metadata file not found: {META_PATH}")
-    with open(META_PATH, "r") as f:
+    with open(META_PATH, "r", encoding="utf-8") as f:
         return json.load(f)
 
 @st.cache_data
@@ -274,13 +274,14 @@ elif page == "7. NO2 Concentration Estimator":
                 )
         submitted = st.form_submit_button("Estimate NO₂ Concentration", type="primary")
 
-  if submitted:
+    if submitted:
         input_df = pd.DataFrame([inputs])[FEATURE_COLS]
         if hasattr(model, "named_steps") and "model" in model.named_steps:
-            pred_no2 = float(model.named_steps["model"].predict(input_df)[0])
+            pred_no2 = float(model.named_steps["model"].predict(input_df.to_numpy())[0])
         else:
             pred_no2 = float(model.predict(input_df)[0])
         band_label, band_color = classify_no2_band(pred_no2)
+
         st.markdown("---")
         r1, r2 = st.columns(2)
         r1.metric("Estimated NO₂(GT) Concentration", f"{pred_no2:.2f} µg/m³")
@@ -292,7 +293,6 @@ elif page == "7. NO2 Concentration Estimator":
             "requires PM₂.₅, PM₁₀, O₃, CO, SO₂, and NO₂ averaged over regulatory windows."
         )
 
-        # Downloadable prediction report
         report_df = input_df.copy()
         report_df["Estimated_NO2_ug_m3"] = round(pred_no2, 2)
         report_df["Reference_Band"] = band_label
